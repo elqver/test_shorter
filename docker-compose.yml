@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+  web:
+    build: .
+    environment:
+      SALT: the_very_secret_salt
+    volumes:
+      - ./code:/code
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+  proxy:
+    image: nginx:1.20
+    container_name: proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - web
+    volumes:
+      - ./nginx:/etc/nginx/
