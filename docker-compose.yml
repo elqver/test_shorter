@@ -8,8 +8,12 @@ services:
       - ./code:/code
   redis:
     image: "redis:alpine"
+    restart: always
     ports:
-      - "6379:6379"
+    - "6379:6379"
+    command: redis-server --save 60 10 --loglevel warning
+    volumes:
+      - cache:/data
   proxy:
     image: nginx:1.20
     container_name: proxy
@@ -21,3 +25,6 @@ services:
       - web
     volumes:
       - ./nginx:/etc/nginx/
+volumes:
+  cache:
+    driver: local
